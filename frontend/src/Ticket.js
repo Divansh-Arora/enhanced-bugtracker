@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
-import { Avatar } from "./App";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -9,18 +8,17 @@ const STATUSES = ["To Do", "In Progress", "Done"];
 
 export default function Ticket() {
 const [tickets, setTickets] = useState([]);
-const [members, setMembers] = useState([]);
 const [projectInfo, setProjectInfo] = useState(null);
 const [loading, setLoading] = useState(true);
 const location = useLocation();
 const projectId = new URLSearchParams(location.search).get("projectId");
 
-// ✅ FIX: wrapped in useCallback
 const loadTickets = useCallback(async () => {
 if (!projectId) {
 setLoading(false);
 return;
 }
+
 
 try {
   const [tRes, pRes] = await Promise.all([
@@ -30,16 +28,15 @@ try {
 
   setTickets(tRes.data);
   setProjectInfo(pRes.data);
-  setMembers(pRes.data.members || []);
 } catch (err) {
   console.log(err);
 } finally {
   setLoading(false);
 }
 
+
 }, [projectId]);
 
-// ✅ FIXED dependency
 useEffect(() => {
 loadTickets();
 }, [loadTickets]);
@@ -66,7 +63,6 @@ if (!projectId) return <p>No project selected</p>;
 
 return ( <div> <h1>Tickets - {projectInfo?.title}</h1>
 
-
   {loading ? (
     <p>Loading...</p>
   ) : (
@@ -87,7 +83,6 @@ return ( <div> <h1>Tickets - {projectInfo?.title}</h1>
     ))
   )}
 </div>
-
 
 );
 }
