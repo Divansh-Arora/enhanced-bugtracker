@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Avatar } from "./App";
+// ❌ Removed Avatar import
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -15,26 +15,35 @@ const addMember = async () => {
 if (!emailInput.trim()) return;
 setLoading(true); setError(""); setSuccess("");
 try {
-const res = await axios.post(`${API_URL}/api/projects/${project._id}/members`, { email: emailInput.trim() });
+const res = await axios.post(
+`${API_URL}/api/projects/${project._id}/members`,
+{ email: emailInput.trim() }
+);
 onUpdate(res.data);
 setSuccess(`Added successfully!`);
 setEmailInput("");
 } catch (err) {
 setError(err.response?.data?.message || "Failed to add member.");
-} finally { setLoading(false); }
+} finally {
+setLoading(false);
+}
 };
 
 const removeMember = async (userId) => {
 try {
-const res = await axios.delete(`${API_URL}/api/projects/${project._id}/members/${userId}`);
+const res = await axios.delete(
+`${API_URL}/api/projects/${project._id}/members/${userId}`
+);
 onUpdate(res.data);
-} catch (err) { setError("Failed to remove member."); }
+} catch (err) {
+setError("Failed to remove member.");
+}
 };
 
 return (
 <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}> <div className="modal"> <h3>Team Members</h3>
 
-```
+
     <input
       placeholder="Add by email"
       value={emailInput}
@@ -121,6 +130,7 @@ prev.map(p => (p._id === updated._id ? updated : p))
 
 return ( <div> <h1>Projects</h1>
 
+
   <button onClick={() => setShowCreate(true)}>
     New Project
   </button>
@@ -159,6 +169,7 @@ return ( <div> <h1>Projects</h1>
     />
   )}
 </div>
+
 
 );
 }
