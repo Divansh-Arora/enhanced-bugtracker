@@ -36,7 +36,7 @@ if (!email || !password) return setError("Please fill in all fields.");
 setLoading(true);
 setError("");
 
-```
+
 try {
   const res = await axios.post(
     `${API_URL}/api/auth/login`, // ✅ FIXED
@@ -54,7 +54,7 @@ try {
 } finally {
   setLoading(false);
 }
-```
+
 
 };
 
@@ -63,7 +63,7 @@ const handleSignup = async () => {
 if (!name || !email || !password || !confirmPassword)
 return setError("Please fill in all fields.");
 
-```
+
 if (password !== confirmPassword)
   return setError("Passwords do not match.");
 
@@ -86,7 +86,7 @@ try {
 } finally {
   setLoading(false);
 }
-```
+
 
 };
 
@@ -99,7 +99,7 @@ mode === "login" ? handleLogin() : handleSignup();
 return (
 <div style={{ minHeight: "100vh", display: "flex", background: "var(--bg)" }}>
 
-```
+
   {/* LEFT PANEL */}
   <div style={{
     flex: 1,
@@ -185,7 +185,7 @@ return (
     </div>
   </div>
 </div>
-```
+
 
 );
 }
