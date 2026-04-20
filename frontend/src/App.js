@@ -11,14 +11,29 @@ const AVATAR_COLORS = [
   ["#ff8c42","#a3521e"],["#ff4d6d","#a3213d"],["#fbbf24","#a37a0d"],
 ];
 
+// ✅ FIXED FUNCTION (handles empty/undefined safely)
 export function getAvatarColor(str = "") {
-  const i = str.charCodeAt(0) % AVATAR_COLORS.length;
-  return AVATAR_COLORS[i];
+  const safeStr = str.trim();
+  if (!safeStr) return AVATAR_COLORS[0];
+
+  const i = safeStr.charCodeAt(0) % AVATAR_COLORS.length;
+  return AVATAR_COLORS[i] || AVATAR_COLORS[0];
 }
 
+// ✅ FIXED AVATAR COMPONENT
 export function Avatar({ name = "", size = 32, style = {} }) {
-  const initials = name.trim().split(" ").map(w => w[0]).join("").slice(0,2).toUpperCase() || "?";
-  const [bg, shadow] = getAvatarColor(name);
+  const safeName = name || "User";
+
+  const initials = safeName
+    .trim()
+    .split(" ")
+    .map(w => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase() || "?";
+
+  const [bg, shadow] = getAvatarColor(safeName);
+
   return (
     <div style={{
       width: size, height: size, borderRadius: "50%",
@@ -59,7 +74,10 @@ function Sidebar() {
   const navigate = useNavigate();
   if (location.pathname === "/") return null;
 
-  const name = localStorage.getItem("name") || localStorage.getItem("email") || "User";
+  const name =
+    localStorage.getItem("name") ||
+    localStorage.getItem("email") ||
+    "User";
 
   return (
     <aside style={{
@@ -106,7 +124,6 @@ function Sidebar() {
           display: "flex", alignItems: "center", gap: 10, padding: "8px 10px",
           borderRadius: 8, textDecoration: "none",
           background: isActive ? "rgba(255,255,255,0.05)" : "transparent",
-          transition: "background 0.15s",
         })}>
           <Avatar name={name} size={28} />
           <div>
@@ -114,11 +131,12 @@ function Sidebar() {
             <div style={{ fontSize: 10.5, color: "var(--sidebar-muted)" }}>View profile</div>
           </div>
         </NavLink>
-        <button className="btn btn-ghost btn-sm" onClick={() => { localStorage.clear(); navigate("/"); }}
-          style={{ width: "100%", justifyContent: "center", color: "var(--red)", borderColor: "rgba(255,77,109,0.2)" }}>
-          <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
-          </svg>
+
+        <button
+          className="btn btn-ghost btn-sm"
+          onClick={() => { localStorage.clear(); navigate("/"); }}
+          style={{ width: "100%", justifyContent: "center", color: "var(--red)" }}
+        >
           Sign out
         </button>
       </div>
